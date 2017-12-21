@@ -46,11 +46,11 @@ else {
 ```
 
 ## Cari kartları listeleme
-* En az 1 tane "filter" parametresi göndermek zorunludur.
+* ``filters`` parametresinin altında en az 1 tane filtre parametresi parametresi göndermek zorunludur.
 
 ```php
 $data = [
-    'filter' => [
+    'filters' => [
         [
             'field' => 'id',
             'operator' => '=',
@@ -119,11 +119,11 @@ else {
 ```
 
 ## Stok kartlarını listeleme
-* En az 1 tane "filter" parametresi göndermek zorunludur.
+* ``filters`` parametresinin altında en az 1 tane filtre parametresi parametresi göndermek zorunludur.
 
 ```php
 $data = [
-    'filter' => [
+    'filters' => [
         [
             'field' => 'id',
             'operator' => '=',
@@ -191,7 +191,7 @@ else {
 ```
 
 ## Hizmet kartlarını listeleme
-* En az 1 tane "filter" parametresi göndermek zorunludur.
+* ``filters`` parametresinin altında en az 1 tane filtre parametresi parametresi göndermek zorunludur.
 
 ```php
 $data = [
@@ -294,7 +294,7 @@ else {
 ```
 
 ## Sipariş fişlerini listeleme
-* En az 1 tane "filter" parametresi göndermek zorunludur.
+* ``filters`` parametresinin altında en az 1 tane filtre parametresi parametresi göndermek zorunludur.
 
 ```php
 $data = [
