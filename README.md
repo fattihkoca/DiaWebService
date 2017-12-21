@@ -339,6 +339,36 @@ else {
 }
 ```
 
+## Dia'daki hesap bilgilerini tanımlama
+Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değişkeninindeki bazı parametreleri değiştirmelisiniz.
+
+```php
+.
+.
+.
+'accounts' => array(
+    // demo hesabı
+    .
+    .
+    'hesabim' => array(
+        'account' => 'sunucu_kodu', // tanımlanan sunucu kodu
+        'company' => 1, // firma kodu
+        'branch' => 1234, // şube kodu
+        'depository' => 4321, // depo kodu
+        'username' => 'ws',
+        'password' => '123456',
+        'lang' => 'tr',
+        'disconnect_same_user' => true, // önceki oturumları kapatır
+    ),
+    .
+    .
+),
+.
+.
+.
+```
+
+
 ## Dia için farklı disiplinlerde ``id`` formatı oluşturmak
 ``Dia`` için verdiğiniz ``id`` değerine önek, sonek ve karakter sabitleme yapabilirsiniz. 
 Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değişkeninindeki bazı parametreleri değiştirebilirsiniz.
