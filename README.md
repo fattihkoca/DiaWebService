@@ -7,7 +7,7 @@ Cari, stok, hizmet ve sipariş kartlarını ``Dia`` sunucusuna göndermek için 
 // DiaWebService sınıfının dosyası dahil edilir
 include_once 'src/DiaWebService.php';
 
-// Class çağrılır
+// Sınıf çağrılır
 $dia = new DiaWebService;
 
 // Oturum Açılır
@@ -73,7 +73,7 @@ else {
 ```
 
 ## Cari kartı id üzerinden getirme
-* Sadece "id" belirtilmesi (2. arguman) yeterlidir.
+* Sadece ``id`` belirtilmesi (2. arguman) yeterlidir.
 
 ```php
 $id = 123;
@@ -92,7 +92,7 @@ else {
 ```
 
 ## Stok Kartı Ekleme
-* "barcode" parametresi hariç geriye kalan tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
+* ``barcode`` parametresi hariç geriye kalan tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
 
 ```php
 $data = [
@@ -146,7 +146,7 @@ else {
 ```
 
 ## Stok kartını id üzerinden getirme
-* Sadece "id" belirtilmesi (2. arguman) yeterlidir.
+* Sadece ``id`` belirtilmesi (2. arguman) yeterlidir.
 
 ```php
 $id = 123;
@@ -218,7 +218,7 @@ else {
 ```
 
 ## Hizmet kartını id üzerinden getirme
-* Sadece "id" belirtilmesi (2. arguman) yeterlidir.
+* Sadece ``id`` belirtilmesi (2. arguman) yeterlidir.
 
 ```php
 $id = 123;
@@ -237,7 +237,7 @@ else {
 ```
 
 ## Sipariş fişi Ekleme
-* "note\_*" parametreleri ve "address_2" parametresi hariç geriye kalan tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
+* ``note_*`` parametreleri ve ``address_2`` parametresi hariç geriye kalan tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
 
 ```php
 $data = [
@@ -321,12 +321,12 @@ else {
 ```
 
 ## Sipariş fişini id üzerinden getirme
-* Sadece "id" belirtilmesi (2. arguman) yeterlidir.
+* Sadece ``id`` belirtilmesi (2. arguman) yeterlidir.
 
 ```php
 $id = 123;
 
-// Sipariş id referansıyla getirme isteği gönderilir
+// Sipariş fişini id referansıyla getirme isteği gönderilir
 $send = $dia->fetch_by_id('order', $id);
 
 // Sonuç başarılı ise ekrana bastırılır
@@ -337,4 +337,58 @@ if($send['success']) {
 else {
     echo $send['message'];
 }
+```
+
+## Dia için farklı disiplinlerde ``id`` formatı oluşturmak
+``Dia`` için verdiğiniz ``id`` değerine önek, sonek ve karakter sabitleme yapabilirsiniz. 
+Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değişkeninindeki bazı parametreleri değiştirebilirsiniz.
+
+### Cari kart kodu için;
+```php
+'customer' => array(
+    'prefix' => 'CK', // önek
+    'suffix' => '', // son ek
+    'length' => 15 // karakter sayısı
+)
+```
+
+### Stok kart kodu için;
+```php
+'stock' => array(
+    'prefix' => 'CK', // önek
+    'suffix' => '', // son ek
+    'length' => 15 // karakter sayısı
+)
+```
+
+### Servis kart kodu için;
+```php
+'service' => array(
+    'prefix' => 'CK', // önek
+    'suffix' => '', // son ek
+    'length' => 15 // karakter sayısı
+)
+```
+
+### Sipariş fiş kodu için;
+```php
+'order' => array(
+    'prefix' => 'CK', // önek
+    'suffix' => '', // son ek
+    'length' => 15 // karakter sayısı
+)
+```
+
+## Konfigürasyonları farklı bir yere taşımak
+``DiaWebService`` sınıfında yer alan ``$configurations`` değişkenini farklı bir yere taşıyabilir. Örneğin Laravel'de env dosyası içerisine yerleştirmek isteyebilirsiniz. 
+
+Bu değişkenin değerlerini taşıdıktan sonra ``__construct()`` metodunda ``$this->conf`` değişkeninin değerini taşıdığınız konfigürasyonların verilerini çağırarak değiştirebilirsiniz.
+
+Örneğin: (DiaWebService.php)
+```php
+.
+.
+$this->conf = \config('DiaWebService');
+.
+.
 ```
