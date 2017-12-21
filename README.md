@@ -347,7 +347,6 @@ Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değ
 .
 .
 'accounts' => array(
-    // demo hesabı
     .
     .
     'hesabim' => array(
