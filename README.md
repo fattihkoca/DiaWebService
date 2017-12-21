@@ -386,9 +386,12 @@ Bu değişkenin değerlerini taşıdıktan sonra ``__construct()`` metodunda ``$
 
 Örneğin: (DiaWebService.php)
 ```php
-.
-.
-$this->conf = \config('DiaWebService');
-.
-.
+public function __construct()
+{
+    .
+    .
+    $this->conf = \config('DiaWebService');
+    .
+    .
+}
 ```
