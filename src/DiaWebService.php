@@ -2,7 +2,7 @@
 
 /**
  * Dia Web Servisi
- * Kişiselleştirmeler: $account_name, $configurations;
+ * Özelleştirmeler: $account_name, $configurations;
  */
 
 class DiaWebService
