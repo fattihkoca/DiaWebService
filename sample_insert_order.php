@@ -8,7 +8,7 @@ include_once 'src/DiaWebService.php';
 // Class çağrılır
 $dia = new DiaWebService;
 
-// Oturum Açılır
+// Oturum açılır
 $dia->login();
 
 // Hesap adı belirlenir

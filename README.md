@@ -1,7 +1,9 @@
 # Dia Web Servisi (PHP)
-Cari, stok, hizmet ve sipariş kartlarını ``Dia`` sunucusuna göndermek için kullanılan ``PHP`` tabanlı servistir.
+Cari, stok ve hizmet kartları ile sipariş fişlerini ``Dia`` sunucusuna göndermek için kullanılan ``PHP`` tabanlı servistir.
 
-### Hazırlıklar
+## Hazırlıklar
+
+Öncelikle ``DiaWebService`` sınıfını çağırıp oturum açma isteği göndermeniz gerekmektedir. Sonrasında ``account_name`` belirtmelisiniz. Yani kullanacağınız hesabı seçmelisiniz. Ayrıca oturum sınıf konfigürasyonlarında seçeceğiniz isimde bir hesap olmalıdır.
 
 ```php
 // DiaWebService sınıfının dosyası dahil edilir
@@ -10,15 +12,194 @@ include_once 'src/DiaWebService.php';
 // Sınıf çağrılır
 $dia = new DiaWebService;
 
-// Oturum Açılır
+// Oturum açılır
 $dia->login();
 
-// Hesap adı belirlenir (Konfigürasyonlarda bu isimde bir hesap olmalıdır)
+// Hesap adı belirlenir
 $dia->account_name = 'demo';
 ```
 
-## Cari Kart Ekleme
-* Aşağıdaki tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
+## Genel Bakış
+
+``DiaWebService`` sınıfında tüm metod sonuçları dizi (Array) formatında dönmektedir. Sonuç içerisinde aşağıdaki parametreler bulunmaktadır:
+
+* ``success``: Sonucun başarılı olup olmadığını belirtir. (``true`` veya ``false`` değerleri döner)
+* ``message``: Sonuç ile ilgili bilgi mesajı belirtir. Sonuç başarılı ise "``OK``" mesajı döner.
+* ``result``: Sonuç verilerini belirtir. (Genellikle ``Array`` formatındadır.)
+
+Örneğin ``login()`` metodunda oturum açılmışsa ``result`` içerisinde ``session_id``, yani oturum ``id`` bilgisi döner.
+
+## Verileri Getirme
+Dia'daki ilgili servisten istenilen bilgileri ``fetch()`` metoduyla getirebilirsiniz. 
+
+* İlk argüman servis türüdür. Bunlar:
+
+    * ``customer``: Cari
+    * ``stock``: Stok
+    * ``service``: Hizmet
+    * ``order``: Sipariş
+
+* İkinci argüman gönderilecek veri dizisidir (Array). 
+
+```php
+$servis_turu = 'customer';
+
+$send = $dia->fetch($servis_turu, $data);
+```
+
+Örnek kullanım:
+```php
+$data = [
+    'filters' => [
+        [
+            'field' => 'id',
+            'operator' => '=',
+            'value' => '123',
+        ]
+    ]
+];
+
+// Cari kartları listeleme isteği gönderilir
+$send = $dia->fetch('customer', $data);
+
+// Sonuç başarılı ise ekrana bastırılır
+if($send['success']) {
+    var_dump($send['result']);
+} 
+// Hata sonucu bastırılır
+else {
+    echo $send['message'];
+}
+```
+
+### 1. Filtreleme (filters)
+``fetch()`` metodunda, veri içerisinde ``filters`` parametresi zorunludur ve altında en az 1 tane filtre parametre grubu (``field``, ``operator``, ``value``) göndermek zorunludur.
+
+* ``field``: Filtrelenecek alanın adı. (mysql'de sütun veya column)
+* ``operator``: Filtre türü. Aşağıdaki operatörler kullanılır.
+    * ``<``
+    * ``>``
+    * ``⇐``
+    * ``>=``
+    * ``!``
+    * ``=``
+    * ``IN``,
+    *  ``NOT IN``
+* ``value``: Filtre değeri.
+
+```php
+$data = [
+    'filters' => [
+        [
+            'field' => 'id',
+            'operator' => '=',
+            'value' => '123',
+        ]
+    ]
+];
+
+// Stok kartlarını getirme isteği gönderilir
+$send = $dia->fetch('stock', $data);
+```
+
+Ayrıca "``id`` değerleri içinde 'ABC' geçenleri getir" demek istediğimizde şunu kullanabiliriz:
+
+```php
+$data = [
+    'filters' => [
+        [
+            'field' => 'id',
+            'value' => 'ABC',
+        ]
+    ]
+];
+
+// Servis kartlarını getirme
+$dia->fetch('service', $data);
+```
+
+### 2. Sıralama (sorts)
+Listenin belirli bir sırada gelmesi isteniyorsa kullanılır. ``sorts`` parametresinin altında en az 1 tane sıralama grubu (``field``, ``sorttype``) göndermelisiniz.
+
+* ``field``: Sıralanması istenen alan adı.
+* ``sorttype``: Sıralama türü (ASC: düz sıralı, DESC: ters sıralı)
+
+```php
+$data = [
+    'filters' => [
+        [
+            'field' => 'id',
+            'sorttype' => 'DESC',
+        ]
+    ]
+];
+```
+
+## İstenen Bir Veriyi ``ID`` Üzerinden Getirme
+Dia'daki ilgili servisten kendi veri tabanınızda ve Dia'da aynı id ile kayıtlı bir veriyi ``fetch_by_id()`` metoduyla getirebilirsiniz. Eğer bir işleminizde farklı filtre kombinasyonlarını kullanmayacaksanız bu metod oldukça kullanışlıdır.
+
+* İlk argüman servis türüdür. Bunlar:
+
+    * ``customer``: Cari
+    * ``stock``: Stok
+    * ``service``: Hizmet
+    * ``order``: Sipariş
+
+* İkinci argüman gönderilecek ``id`` değeridir. 
+
+```php
+$id = 123;
+
+// Cari kartı id referansıyla getirme isteği gönderilir
+$send = $dia->fetch_by_id('customer', $id);
+
+// Sonuç başarılı ise ekrana bastırılır
+if($send['success']) {
+    var_dump($send['result']);
+} 
+// Hata sonucu bastırılır
+else {
+    echo $send['message'];
+}
+```
+
+```php
+$id = 123;
+
+// Sipariş fişini "id" referansıyla getirme
+$dia->fetch_by_id('order', $id);
+```
+
+## Yeni Veri Ekleme
+Dia'daki ilgili servise yeni veri eklemek için ``insert()`` metodu kullanılır.
+
+* İlk argüman servis türüdür. Bunlar:
+
+    * ``customer``: Cari
+    * ``stock``: Stok
+    * ``service``: Hizmet
+    * ``order``: Sipariş
+
+* İkinci argüman gönderilecek veri dizisidir (Array).
+
+```php
+// Cari kart ekleme
+$dia->insert('customer', $data);
+
+// Stok kartı ekleme
+$dia->insert('stock', $data);
+
+// Hizmet kartı ekleme
+$dia->insert('service', $data);
+
+// Sipariş fişi ekleme
+$dia->insert('order', $data);
+```
+
+Şimdi tek tek servisleri eklerken göndereceğimiz verilere bakalım:
+
+### 1. Cari kart ekleme
+Aşağıdaki tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
 
 ```php
 $data = [
@@ -45,54 +226,8 @@ else {
 }
 ```
 
-## Cari kartları listeleme
-* ``filters`` parametresinin altında en az 1 tane filtre parametresi parametresi göndermek zorunludur.
-
-```php
-$data = [
-    'filters' => [
-        [
-            'field' => 'id',
-            'operator' => '=',
-            'value' => '123',
-        ]
-    ]
-];
-
-// Cari kartları listeleme isteği gönderilir
-$send = $dia->fetch('customer', $data);
-
-// Sonuç başarılı ise ekrana bastırılır
-if($send['success']) {
-    var_dump($send['result']);
-} 
-// Hata sonucu bastırılır
-else {
-    echo $send['message'];
-}
-```
-
-## Cari kartı id üzerinden getirme
-* Sadece ``id`` belirtilmesi (2. arguman) yeterlidir.
-
-```php
-$id = 123;
-
-// Cari kartı id referansıyla getirme isteği gönderilir
-$send = $dia->fetch_by_id('customer', $id);
-
-// Sonuç başarılı ise ekrana bastırılır
-if($send['success']) {
-    var_dump($send['result']);
-} 
-// Hata sonucu bastırılır
-else {
-    echo $send['message'];
-}
-```
-
-## Stok Kartı Ekleme
-* ``barcode`` parametresi hariç geriye kalan tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
+### 2. Stok kartı ekleme
+``barcode`` parametresi hariç geri kalan tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
 
 ```php
 $data = [
@@ -118,54 +253,8 @@ else {
 }
 ```
 
-## Stok kartlarını listeleme
-* ``filters`` parametresinin altında en az 1 tane filtre parametresi parametresi göndermek zorunludur.
-
-```php
-$data = [
-    'filters' => [
-        [
-            'field' => 'id',
-            'operator' => '=',
-            'value' => '123',
-        ]
-    ]
-];
-
-// Stok kartı listeleme isteği gönderilir
-$send = $dia->fetch('stock', $data);
-
-// Sonuç başarılı ise ekrana bastırılır
-if($send['success']) {
-    var_dump($send['result']);
-} 
-// Hata sonucu bastırılır
-else {
-    echo $send['message'];
-}
-```
-
-## Stok kartını id üzerinden getirme
-* Sadece ``id`` belirtilmesi (2. arguman) yeterlidir.
-
-```php
-$id = 123;
-
-// Stok kartını id referansıyla getirme isteği gönderilir
-$send = $dia->fetch_by_id('stock', $id);
-
-// Sonuç başarılı ise ekrana bastırılır
-if($send['success']) {
-    var_dump($send['result']);
-} 
-// Hata sonucu bastırılır
-else {
-    echo $send['message'];
-}
-```
-
-## Hizmet Kartı Ekleme
-* Aşağıdaki tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
+### 3. Hizmet kartı ekleme
+Aşağıdaki tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
 
 ```php
 $data = [
@@ -190,54 +279,8 @@ else {
 }
 ```
 
-## Hizmet kartlarını listeleme
-* ``filters`` parametresinin altında en az 1 tane filtre parametresi parametresi göndermek zorunludur.
-
-```php
-$data = [
-    'filter' => [
-        [
-            'field' => 'id',
-            'operator' => '=',
-            'value' => '123',
-        ]
-    ]
-];
-
-// Hizmet kartı listeleme isteği gönderilir
-$send = $dia->fetch('service', $data);
-
-// Sonuç başarılı ise ekrana bastırılır
-if($send['success']) {
-    var_dump($send['result']);
-} 
-// Hata sonucu bastırılır
-else {
-    echo $send['message'];
-}
-```
-
-## Hizmet kartını id üzerinden getirme
-* Sadece ``id`` belirtilmesi (2. arguman) yeterlidir.
-
-```php
-$id = 123;
-
-// Cari kartını id referansıyla getirme isteği gönderilir
-$send = $dia->fetch_by_id('service', $id);
-
-// Sonuç başarılı ise ekrana bastırılır
-if($send['success']) {
-    var_dump($send['result']);
-} 
-// Hata sonucu bastırılır
-else {
-    echo $send['message'];
-}
-```
-
-## Sipariş fişi Ekleme
-* ``note_*`` parametreleri ve ``address_2`` parametresi hariç geriye kalan tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
+### 4. Sipariş fişi Ekleme
+``note_*`` parametreleri ve ``address_2`` parametresi hariç geri kalan tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
 
 ```php
 $data = [
@@ -252,29 +295,35 @@ $data = [
     'is_eft' => false, // eft/havale ödemesi mi
     'currency' => 'TRY', // para birimi (TRY, USD, EUR)
     'products' => array( // sipariş kalemleri tanımlanır (Ürünler Dia'da kayıtlı olmalı)
+
+        // Örnek stok ürünü seçelim (Fiziksel ürün)
         array(
+            'is_physical' => true, // fiziksel ürün (STOK - MALZEME)
             'id' => '123', // 1. ürün id.si
             'price' => 100, // 1. ürün için ödenen tutar
             'tax' => 8, // kdv
             'tax_included' => true, // kdv dahil mi
             'quantity' => 1, // satılan ürün adedi
             'discount' => 0, // indirim oranı (yüzde)
-            'is_physical' => true, // fiziksel ürün (STOK - MALZEME)
-            'note_1' => 'Ürün notu 1',
-            'note_2' => 'Ürün notu 2',
+            'note_1' => 'Ürün notu 1', // [ZORUNLU DEĞİL]
+            'note_2' => 'Ürün notu 2', // [ZORUNLU DEĞİL]
         ),
+
+        // Örnek hizmet ürünü seçelim (Fiziksel ürün değil)
         array(
+            'is_physical' => false, // fiziksel ürün değil (HİZMET)
             'id' => '123', // 2. ürün id.si
             'price' => 900, // 2. ürün için ödenen tutar
             'tax' => 8, // kdv
             'tax_included' => true, // kdv dahil mi
             'quantity' => 1, // satılan ürün adedi
             'discount' => 5, // indirim oranı (yüzde)
-            'is_physical' => false, // fiziksel ürün değil (HİZMET)
             'note_1' => 'Hizmet notu 1', // [ZORUNLU DEĞİL]
             'note_2' => 'Hizmet notu 2', // [ZORUNLU DEĞİL]
         )
     ),
+
+    // Dilerseniz sipariş notlarını gönderebilirsiniz
     'note_1' => 'Sipariş notu 1', // [ZORUNLU DEĞİL]
     'note_2' => 'Sipariş notu 2', // [ZORUNLU DEĞİL]
     'note_3' => 'Sipariş notu 3', // [ZORUNLU DEĞİL]
@@ -286,52 +335,6 @@ $send = $dia->insert('order', $data);
 // Sonuç başarılı ise ekrana bastırılır
 if($send['success']) {
     echo 'Sipariş kartı eklendi: #123';
-} 
-// Hata sonucu bastırılır
-else {
-    echo $send['message'];
-}
-```
-
-## Sipariş fişlerini listeleme
-* ``filters`` parametresinin altında en az 1 tane filtre parametresi parametresi göndermek zorunludur.
-
-```php
-$data = [
-    'filter' => [
-        [
-            'field' => 'id',
-            'operator' => '=',
-            'value' => '123',
-        ]
-    ]
-];
-
-// Sipariş fişi listeleme isteği gönderilir
-$send = $dia->fetch('order', $data);
-
-// Sonuç başarılı ise ekrana bastırılır
-if($send['success']) {
-    var_dump($send['result']);
-} 
-// Hata sonucu bastırılır
-else {
-    echo $send['message'];
-}
-```
-
-## Sipariş fişini id üzerinden getirme
-* Sadece ``id`` belirtilmesi (2. arguman) yeterlidir.
-
-```php
-$id = 123;
-
-// Sipariş fişini id referansıyla getirme isteği gönderilir
-$send = $dia->fetch_by_id('order', $id);
-
-// Sonuç başarılı ise ekrana bastırılır
-if($send['success']) {
-    var_dump($send['result']);
 } 
 // Hata sonucu bastırılır
 else {
@@ -366,7 +369,6 @@ Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değ
 .
 .
 ```
-
 
 ## Dia için farklı disiplinlerde ``id`` formatı oluşturmak
 ``Dia`` için verdiğiniz ``id`` değerine önek, sonek ve karakter sabitleme yapabilirsiniz. 
