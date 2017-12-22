@@ -72,19 +72,11 @@ else {
 }
 ```
 
-### 1. Filtreleme (filters)
+#### 1. Filtreleme (filters)
 ``fetch()`` metodunda, veri içerisinde ``filters`` parametresi zorunludur ve altında en az 1 tane filtre parametre grubu (``field``, ``operator``, ``value``) göndermek zorunludur.
 
-* ``field``: Filtrelenecek alanın adı. (mysql'de sütun veya column)
-* ``operator``: Filtre türü. Aşağıdaki operatörler kullanılır.
-    * ``<``
-    * ``>``
-    * ``⇐``
-    * ``>=``
-    * ``!``
-    * ``=``
-    * ``IN``,
-    *  ``NOT IN``
+* ``field``: Filtrelenecek alanın adı. (mysql'de sütun veya column adı.)
+* ``operator``: Filtre türü. Şu operatörler kullanılır: '``<``', '``>``', '``<=``', '``>=``', '``!``', '``=``', '``IN``', '``NOT IN``'
 * ``value``: Filtre değeri.
 
 ```php
@@ -102,7 +94,7 @@ $data = [
 $send = $dia->fetch('stock', $data);
 ```
 
-Ayrıca "``id`` değerleri içinde 'ABC' geçenleri getir" demek istediğimizde şunu kullanabiliriz:
+Ayrıca "``id`` değerleri içinde 'ABC' geçenleri getir" demek istediğimizde şunu kullanabilirsiniz:
 
 ```php
 $data = [
@@ -118,7 +110,7 @@ $data = [
 $dia->fetch('service', $data);
 ```
 
-### 2. Sıralama (sorts)
+#### 2. Sıralama (sorts)
 Listenin belirli bir sırada gelmesi isteniyorsa kullanılır. ``sorts`` parametresinin altında en az 1 tane sıralama grubu (``field``, ``sorttype``) göndermelisiniz.
 
 * ``field``: Sıralanması istenen alan adı.
@@ -135,7 +127,7 @@ $data = [
 ];
 ```
 
-## İstenen Bir Veriyi ``ID`` Üzerinden Getirme
+### İstenen Bir Veriyi ``ID`` Üzerinden Getirme
 Dia'daki ilgili servisten kendi veri tabanınızda ve Dia'da aynı id ile kayıtlı bir veriyi ``fetch_by_id()`` metoduyla getirebilirsiniz. Eğer bir işleminizde farklı filtre kombinasyonlarını kullanmayacaksanız bu metod oldukça kullanışlıdır.
 
 * İlk argüman servis türüdür. Bunlar:
@@ -279,7 +271,7 @@ else {
 }
 ```
 
-### 4. Sipariş fişi Ekleme
+### 4. Sipariş fişi ekleme
 ``note_*`` parametreleri ve ``address_2`` parametresi hariç geri kalan tüm parametrelerin örnekteki gibi gönderilmesi zorunludur.
 
 ```php
@@ -342,7 +334,7 @@ else {
 }
 ```
 
-## Dia'daki hesap bilgilerini tanımlama
+## Dia'daki Hesap Bilgilerini Özelleştirme
 Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değişkeninindeki bazı parametreleri değiştirmelisiniz.
 
 ```php
@@ -370,47 +362,47 @@ Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değ
 .
 ```
 
-## Dia için farklı disiplinlerde ``id`` formatı oluşturmak
+## Dia İçin ``ID`` Formatlarını Özelleştirme
 ``Dia`` için verdiğiniz ``id`` değerine önek, sonek ve karakter sabitleme yapabilirsiniz. 
 Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değişkeninindeki bazı parametreleri değiştirebilirsiniz.
 
-### Cari kart kodu için;
+#### 1. Cari kart kodu için;
 ```php
 'customer' => array(
     'prefix' => 'CK', // önek
-    'suffix' => '', // son ek
+    'suffix' => '', // sonek
     'length' => 15 // karakter sayısı
 )
 ```
 
-### Stok kart kodu için;
+#### 2. Stok kart kodu için;
 ```php
 'stock' => array(
     'prefix' => 'CK', // önek
-    'suffix' => '', // son ek
+    'suffix' => '', // sonek
     'length' => 15 // karakter sayısı
 )
 ```
 
-### Servis kart kodu için;
+#### 3. Servis kart kodu için;
 ```php
 'service' => array(
     'prefix' => 'CK', // önek
-    'suffix' => '', // son ek
+    'suffix' => '', // sonek
     'length' => 15 // karakter sayısı
 )
 ```
 
-### Sipariş fiş kodu için;
+#### 4. Sipariş fiş kodu için;
 ```php
 'order' => array(
     'prefix' => 'CK', // önek
-    'suffix' => '', // son ek
+    'suffix' => '', // sonek
     'length' => 15 // karakter sayısı
 )
 ```
 
-## Konfigürasyonları farklı bir yere taşımak
+## Konfigürasyonları Farklı Bir Yere Taşımak
 ``DiaWebService`` sınıfında yer alan ``$configurations`` değişkenini farklı bir yere taşıyabilir. Örneğin Laravel'de env dosyası içerisine yerleştirmek isteyebilirsiniz. 
 
 Bu değişkenin değerlerini taşıdıktan sonra ``__construct()`` metodunda ``$this->conf`` değişkeninin değerini taşıdığınız konfigürasyonların verilerini çağırarak değiştirebilirsiniz.
