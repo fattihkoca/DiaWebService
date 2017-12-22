@@ -402,7 +402,7 @@ Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değ
 )
 ```
 
-## Konfigürasyonları Farklı Bir Yere Taşımak
+## Konfigürasyonları Farklı Bir Yere Taşıma
 ``DiaWebService`` sınıfında yer alan ``$configurations`` değişkenini farklı bir yere taşıyabilir. Örneğin Laravel'de env dosyası içerisine yerleştirmek isteyebilirsiniz. 
 
 Bu değişkenin değerlerini taşıdıktan sonra ``__construct()`` metodunda ``$this->conf`` değişkeninin değerini taşıdığınız konfigürasyonların verilerini çağırarak değiştirebilirsiniz.
