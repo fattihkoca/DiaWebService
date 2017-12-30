@@ -13,130 +13,144 @@ class DiaWebService
     // Web servis yapılandırma ayarları
     private $configurations = array(
         // dia sunucusu tarafındaki kayıtlı hesap bilgileri
-        'accounts' => array(
+            'accounts' => array(
             // demo hesabı
-            'demo' => array(
-                'account' => 'diademo', // tanımlanan sunucu kodu
-                'company' => 34, // firma kodu
-                'branch' => null, // şube kodu
-                'depository' => null, // depo kodu
-                'username' => 'ws',
-                'password' => 'ws',
-                'lang' => 'tr',
-                'disconnect_same_user' => true, // önceki oturumları kapatır
-            ),
+                'demo' => array(
+                    'account' => 'diademo', // tanımlanan sunucu kodu
+                    'company' => 34, // firma kodu
+                    'branch' => null, // şube kodu
+                    'depository' => null, // depo kodu
+                    'username' => 'ws',
+                    'password' => 'ws',
+                    'lang' => 'tr',
+                    'disconnect_same_user' => true, // önceki oturumları kapatır
+                ),
 
-            'demo2' => array(
-                'account' => 'diademo', // tanımlanan sunucu kodu
-                'company' => 1, // firma kodu
-                'branch' => 1234, // şube kodu
-                'depository' => 4321, // depo kodu
-                'username' => 'ws',
-                'password' => 'ws',
-                'lang' => 'tr',
-                'disconnect_same_user' => true, // önceki oturumları kapatır
+                'demo2' => array(
+                    'account' => 'diademo', // tanımlanan sunucu kodu
+                    'company' => 1, // firma kodu
+                    'branch' => 1234, // şube kodu
+                    'depository' => 4321, // depo kodu
+                    'username' => 'ws',
+                    'password' => 'ws',
+                    'lang' => 'tr',
+                    'disconnect_same_user' => true, // önceki oturumları kapatır
+                ),
             ),
-        ),
 
         // cari kart isimlendirme ayarları
-        'customer' => array(
-            'prefix' => 'CK', // önek
-            'suffix' => '', // son ek
-            'length' => 15 // karakter sayısı
-        ),
+            'customer' => array(
+                'prefix' => 'CK', // önek
+                'suffix' => '', // son ek
+                'length' => 15 // karakter sayısı
+            ),
 
         // stok kartı isimlendirme ayarları
-        'stock' => array(
-            'prefix' => 'SK', // önek
-            'suffix' => '', // sonek
-            'length' => 10 // karakter sayısı
-        ),
+            'stock' => array(
+                'prefix' => 'SK', // önek
+                'suffix' => '', // sonek
+                'length' => 10 // karakter sayısı
+            ),
 
         // hizmet kartı isimlendirme ayarları
-        'service' => array(
-            'prefix' => 'HK', // önek
-            'suffix' => '', // sonek
-            'length' => 10 // karakter sayısı
-        ),
+            'service' => array(
+                'prefix' => 'HK', // önek
+                'suffix' => '', // sonek
+                'length' => 10 // karakter sayısı
+            ),
 
         // sipariş fişi isimlendirme ayarları
-        'order' => array(
-            'prefix' => 'SF', // önek
-            'suffix' => '', // sonek
-            'length' => 10 // karakter sayısı
+            'order' => array(
+                'prefix' => 'SF', // önek
+                'suffix' => '', // sonek
+                'length' => 10 // karakter sayısı
+            ),
         ),
-    ),
 
     // Gönderilecek istek standartları
-    $request = array(
-        'url' => 'ws.dia.com.tr/api/v3/', // isteğin gönderileceği sunucu
-        'method' => 'post', // veri gönderim metodu
-        'format' => 'json', // veri alış-veriş formatı
-        'secure' => true, // https bağlantısı
-    ),
+        $request = array(
+            'url' => 'ws.dia.com.tr/api/v3/', // isteğin gönderileceği sunucu
+            'method' => 'post', // veri gönderim metodu
+            'format' => 'json', // veri alış-veriş formatı
+            'secure' => true, // https bağlantısı
+        ),
 
     // Cari, stok, hizmet, sipariş işlemlerinin alt parametreleri
-    $parameters = array(
+        $parameters = array(
         // Cari kart
-        'customer' => array(
-            'module' => 'scf',
-            'field' => 'carikartkodu',
-            'fetch' => 'scf_carikart_listele',
-            'insert' => 'scf_carikart_ekle',
-            'update' => 'scf_carikart_guncelle',
-            'delete' => 'scf_carikart_sil',
-            'requireds' => array('id', 'firstname', 'lastname', 'email', 'address', 'city', 'phone', 'tckn'),
-        ),
+            'customer' => array(
+                'module' => 'scf',
+                'field' => 'carikartkodu',
+                'fetch' => 'scf_carikart_listele',
+                'insert' => 'scf_carikart_ekle',
+                'update' => 'scf_carikart_guncelle',
+                'delete' => 'scf_carikart_sil',
+                'requireds' => array(
+                    'id', 'firstname', 'lastname', 'email', 'address', 
+                    'city', 'phone', 'tckn'
+                ),
+            ),
 
         // Stok kartı
-        'stock' => array(
-            'module' => 'scf',
-            'field' => 'stokkartkodu',
-            'fetch' => 'scf_stokkart_listele',
-            'insert' => 'scf_stokkart_ekle',
-            'update' => 'scf_stokkart_guncelle',
-            'delete' => 'scf_stokkart_sil',
-            'requireds' => array('id', 'name', 'price', 'tax', 'tax_included', 'is_promotion'),
-        ),
+            'stock' => array(
+                'module' => 'scf',
+                'field' => 'stokkartkodu',
+                'fetch' => 'scf_stokkart_listele',
+                'insert' => 'scf_stokkart_ekle',
+                'update' => 'scf_stokkart_guncelle',
+                'delete' => 'scf_stokkart_sil',
+                'requireds' => array(
+                    'id', 'name', 'price', 'tax', 'tax_included', 'is_promotion'
+                ),
+            ),
 
         // Servis kartı
-        'service' => array(
-            'module' => 'scf',
-            'field' => 'hizmetkartkodu',
-            'fetch' => 'scf_hizmetkart_listele',
-            'insert' => 'scf_hizmetkart_ekle',
-            'update' => 'scf_hizmetkart_guncelle',
-            'delete' => 'scf_hizmetkart_sil',
-            'requireds' => array('id', 'name', 'price', 'tax', 'tax_included', 'is_promotion'),
-        ),
+            'service' => array(
+                'module' => 'scf',
+                'field' => 'hizmetkartkodu',
+                'fetch' => 'scf_hizmetkart_listele',
+                'insert' => 'scf_hizmetkart_ekle',
+                'update' => 'scf_hizmetkart_guncelle',
+                'delete' => 'scf_hizmetkart_sil',
+                'requireds' => array(
+                    'id', 'name', 'price', 'tax', 'tax_included', 'is_promotion'
+                ),
+            ),
 
         // Sipariş fişi
-        'order' => array(
-            'module' => 'scf',
-            'field' => 'fisno',
-            'fetch' => 'scf_siparis_listele',
-            'insert' => 'scf_siparis_ekle',
-            'update' => 'scf_siparis_guncelle',
-            'delete' => 'scf_siparis_sil',
-            'requireds' => array('id', 'customer_id', 'date', 'installment', 'address', 'city', 'phone', 'is_eft', 'currency', 'products'),
+            'order' => array(
+                'module' => 'scf',
+                'field' => 'fisno',
+                'fetch' => 'scf_siparis_listele',
+                'insert' => 'scf_siparis_ekle',
+                'update' => 'scf_siparis_guncelle',
+                'delete' => 'scf_siparis_sil',
+                'requireds' => array(
+                    'id', 'customer_id', 'date', 'installment', 
+                    'address', 'city', 'phone', 'is_eft', 'currency', 'products'
+                ),
+            ),
         ),
-    ),
 
     // Class ile ilgili bazı önemli değişkenler
-    $conf, $session, $account, $company, $period, $module, $branch, $depository, $exception_title;
+        $conf, $session, $account, $company, $period, 
+        $module, $branch, $depository, $exception_title;
 
     // İşlemlere başlamadan önce gerekli ekipmanlar tanımlanır
     public function __construct()
     {
-        // Yukarıda yer alan konfigürasyonları farklı bir alana taşımak isterseniz $this->configurations değişkenini değiştirmeniz yeterlidir
+        // Yukarıda yer alan konfigürasyonları farklı bir alana taşımak isterseniz 
+        // $this->configurations değişkenini değiştirmeniz yeterlidir
         $this->conf = $this->configurations;
 
         // İstisnalar için standart başlık
-        $this->exception_title = __CLASS__ . ' Error:';
+        $this->exception_title = __class__ . ' Error:';
     }
 
     // İşlem sonucunu döndürme
-    private function response_handle($success = true, $message = 'OK', $result = array())
+    private function response_handle(
+        $success = true, $message = 'OK', $result = array()
+    )
     {
         return array(
             'success' => $success,
@@ -146,9 +160,15 @@ class DiaWebService
     }
 
     // İstisna döndürme aracı
-    private function exception_handle($message = 'An unknown error has occurred!', $result = array())
+    private function exception_handle(
+        $message = 'An unknown error has occurred!', $result = array()
+    )
     {
-        throw new Exception(PHP_EOL . $this->exception_title . PHP_EOL . $message . PHP_EOL);
+        throw new Exception(
+            PHP_EOL . $this->exception_title . 
+            PHP_EOL . $message . 
+            PHP_EOL
+        );
         return false;
     }
 
@@ -156,13 +176,18 @@ class DiaWebService
      * İstenen işleme (cari, stok, hizmet, sipariş) uygun parametreler
      *
      * @param string $type : Alan türü [customer|stock|service|order]
-     * @return [module: Dia modülü, field: id yerine geçen field, fetch: getirme işlemi anahtarı, insert: ekleme işlemi anahtarı, update: güncelleme işlemi anahtarı, delete: silme işlemi anahtarı, requireds : commit işlemlerinde belirtilmesi zorunlu parametreler]
+     * @return [module: Dia modülü, field: id yerine geçen field, 
+     * fetch: getirme işlemi anahtarı, 
+     * insert: ekleme işlemi anahtarı, 
+     * update: güncelleme işlemi anahtarı, 
+     * delete: silme işlemi anahtarı, 
+     * requireds : commit işlemlerinde belirtilmesi zorunlu parametreler]
      */
     private function transaction_parameters($type = 'customer')
     {
         // Eğer uygun işlem türü seçilmemişse hata döndür
-        if(!array_key_exists($type, $this->parameters)) {
-            $message = 'Unknown transaction type: '. $type;
+        if (!array_key_exists($type, $this->parameters)) {
+            $message = 'Unknown transaction type: ' . $type;
             $this->exception_handle();
             return $this->response_handle(array(
                 false,
@@ -178,7 +203,9 @@ class DiaWebService
 
     // create, update, delete işlemlerinin ön kontrolü
     // zorunlu alan kontrolü + varlık kontrolü
-    private function modification_controller($type = 'customer', $transaction = 'insert', $data = array())
+    private function modification_controller(
+        $type = 'customer', $transaction = 'insert', $data = array()
+    )
     {
         if (!is_array($data)) {
             $message = 'The "data" argument must be array.';
@@ -211,14 +238,15 @@ class DiaWebService
             if (!array_key_exists($field, $data)) {    
                 // zorunlu alanları haritala
                 $fields_maps = print_r($required_fields, true);
-                $message = 'Has missing fields. Required fields: ' . PHP_EOL . $fields_maps;
+                $message = 'Has missing fields. Required fields: ' . 
+                    PHP_EOL . $fields_maps;
                 $accepted = $this->exception_handle($message);
                 break;
             }
         }
 
         // zorunlu alan kontrolüne takılmışsa
-        if(!$accepted) {
+        if (!$accepted) {
             return $this->response_handle(array(
                 false,
                 $message
@@ -229,7 +257,7 @@ class DiaWebService
         $exists = $this->fetch_by_id($type, $data['id']);
 
         // cari kart varken insert işlemi yapılmışsa içinde id olan sonucu döndür
-        if($transaction == 'insert' && $exists['success']) {
+        if ($transaction == 'insert' && $exists['success']) {
             return $this->response_handle(
                 true,
                 'OK',
@@ -240,15 +268,15 @@ class DiaWebService
         }
 
         // cari kart bulunamamış ve update veya delete yapılacaksa 
-        if($transaction != 'insert' && !$exists['success']) {
+        if ($transaction != 'insert' && !$exists['success']) {
             // update işlemi ise işlem türünü insert olarak değiştir
             // amaç hata döndürmek yerine yeniden kaydetmek
-            if($transaction == 'update') {
+            if ($transaction == 'update') {
                 $transaction = 'insert';
             }
 
             // delete işlemi ise içinde id olan sonucu döndür
-            elseif($transaction == 'delete') {
+            elseif ($transaction == 'delete') {
                 return $this->response_handle(
                     true,
                     'OK',
@@ -282,7 +310,8 @@ class DiaWebService
                 );
             }
 
-            $msg = 'The '. $params['type'] .' could not be inserted.' . PHP_EOL . 'Response msg: ' . print_r($response, true);
+            $msg = 'The ' . $params['type'] . ' could not be inserted.' . 
+                PHP_EOL . 'Response msg: ' . print_r($response, true);
 
             // Hata döndürülür
             $this->exception_handle($msg);
@@ -312,7 +341,8 @@ class DiaWebService
         } elseif (!isset($data['filters']) || !is_array($data['filters'])) {
             $error = 'filters parameter (Array) must be specified.';
         } elseif (!isset($data['filters'][0]) || !is_array($data['filters'][0])) {
-            $error = 'filters parameter\'s first parameter must be array. ["filters" => [["field" => ...]]';
+            $error = 'filters parameter\'s first parameter must be array. 
+                ["filters" => [["field" => ...]]';
         }
 
         // hata varsa döndür
@@ -339,15 +369,16 @@ class DiaWebService
         }
 
         // limit verisi düzenlenir
-        $data['limit'] = !isset($data['limit']) || !is_numeric($data['limit']) ? 1 : $data['limit'];
+        $data['limit'] = !isset($data['limit']) || !is_numeric($data['limit']) 
+            ? 1 : $data['limit'];
 
         // sıralama işlemi düzenlenir
-        $data['sorts'] = isset($data['sorts']) && is_array($data['sorts']) && isset($data['sorts'][0]) && is_array($data['sorts'][0]) ? $data['sorts'] : array(
-            array(
+        $data['sorts'] = isset($data['sorts']) && is_array($data['sorts']) 
+            && isset($data['sorts'][0]) && is_array($data['sorts'][0]) 
+            ? $data['sorts'] : array(array(
                 'field' => $params['field'],
                 'sorttype' => 'DESC'
-            )
-        );
+            ));
 
         // ---------
 
@@ -376,7 +407,7 @@ class DiaWebService
                 );
             }
 
-            $msg = 'There was an error when checking '. $type .' entity.';
+            $msg = 'There was an error when checking ' . $type . ' entity.';
 
             // hata döndürülür
             $this->exception_handle($msg);
@@ -387,10 +418,12 @@ class DiaWebService
         }
 
         // Dia'dan dönen sonuç bilgisi alınır
-        $result = is_array($response) && !empty($response['result']) && is_array($response['result']) && count($response['result']) ? $response['result'] : false;
+        $result = is_array($response) && !empty($response['result']) 
+            && is_array($response['result']) && count($response['result']) 
+            ? $response['result'] : false;
 
         // sonuç dönmemişse
-        if(!$result) {
+        if (!$result) {
             // hata döndürülür
             return $this->response_handle(
                 false,
@@ -473,7 +506,7 @@ class DiaWebService
         }
 
         // hata mevcutsa hata döndür
-        if(!empty($error)) {
+        if (!empty($error)) {
             $this->exception_handle($msg);
             return $this->response_handle(
                 false,
@@ -657,7 +690,8 @@ class DiaWebService
         $is_eft = $data['is_eft'] ? 'E' : 'H';
 
         // Para birimi
-        $currency = $data['currency'] == 'TRY' || $data['currency'] == 'YTL' ? 'TL' : $data['currency'];
+        $currency = $data['currency'] == 'TRY' || $data['currency'] == 'YTL' 
+            ? 'TL' : $data['currency'];
 
         $total_price = 0;
 
@@ -665,8 +699,10 @@ class DiaWebService
 
         // Sipariş kalemleri hazırlanır
         foreach ($data['products'] as $item) {
-            if(!isset($item['id']) || !isset($item['price']) || !isset($item['quantity']) || !isset($item['discount'])) {
-                $msg = 'Has missing fields on "product" parameter. Required fields: "id", "price", "quantity", "discount"';
+            if (!isset($item['id']) || !isset($item['price']) || 
+                !isset($item['quantity']) || !isset($item['discount'])) {
+                $msg = 'Has missing fields on "product" parameter. 
+                    Required fields: "id", "price", "quantity", "discount"';
                 $this->exception_handle($msg);
 
                 return $this->response_handle(
@@ -683,17 +719,19 @@ class DiaWebService
             $tax_included = isset($item['tax_included']) ? 'D' : 'H';
 
             // Ürün tipi
-            $item_type = isset($item['is_physical']) && $item['is_physical'] ? 'MLZM' : 'HZMT';
+            $item_type = isset($item['is_physical']) && $item['is_physical'] 
+                ? 'MLZM' : 'HZMT';
 
             //$is_promotion = isset($item['is_promotion']) ? 0 : 0;
             $is_promotion = 0;
 
             // ürün türü malzeme ise stoklarda ara
-            if($item_type == 'MLZM') {
+            if ($item_type == 'MLZM') {
                 // ürünün detaylarına id.si üzerinden erişilir
                 $item_detail = $this->fetch_by_id('stock', $item['id']);
 
-                if(!$item_detail['success'] || !isset($item_detail['result']) || !isset($item_detail['result'][0])) {
+                if (!$item_detail['success'] || !isset($item_detail['result']) 
+                    || !isset($item_detail['result'][0])) {
                     $msg = '#' . $item['id'] . ' stock id not found.';
                     $this->exception_handle($msg);
                     return $this->response_handle(
@@ -704,15 +742,15 @@ class DiaWebService
 
                 $item_detail = $item_detail['result'][0];
 
-                if(isset($item_detail['_key'])) {
+                if (isset($item_detail['_key'])) {
                     $item_key = $item_detail['_key'];
                 }
 
-                if(isset($item_detail['birimkeyleri'])) {
+                if (isset($item_detail['birimkeyleri'])) {
                     $item_unit_key = $item_detail['birimkeyleri'];
                 }
 
-                if(empty($item_key) || empty($item_unit_key)) {
+                if (empty($item_key) || empty($item_unit_key)) {
                     $msg = $item['id'] . ' stock code not exists or didn\'t found.';
                     $this->exception_handle($msg);
                     return $this->response_handle(
@@ -727,7 +765,8 @@ class DiaWebService
                 // ürünün detaylarına id.si üzerinden erişilir
                 $item_detail = $this->fetch_by_id('service', $item['id']);
 
-                if(!$item_detail['success'] || !isset($item_detail['result']) || !isset($item_detail['result'][0])) {
+                if (!$item_detail['success'] || !isset($item_detail['result']) 
+                    || !isset($item_detail['result'][0])) {
                     $msg = $item_service_code . ' service code not found.';
                     $this->exception_handle($msg);
                     return $this->response_handle(
@@ -738,15 +777,15 @@ class DiaWebService
 
                 $item_detail = $item_detail['result'][0];
 
-                if(isset($item_detail['_key'])) {
+                if (isset($item_detail['_key'])) {
                     $item_key = $item_detail['_key'];
                 }
 
-                if(isset($item_detail['birimkeyleri'])) {
+                if (isset($item_detail['birimkeyleri'])) {
                     $item_unit_key = $item_detail['birimkeyleri'];
                 }
 
-                if(empty($item_key) || empty($item_unit_key)) {
+                if (empty($item_key) || empty($item_unit_key)) {
                     $msg = $item_service_code . ' service code not exists or didn\'t found.';
                     $this->exception_handle($msg);
                     return $this->response_handle(
@@ -784,7 +823,8 @@ class DiaWebService
                 'onay' => 'KABUL',
             );
 
-            $total_price += ($item['price'] - ($item['price'] * $item['discount'] / 100) * $item['quantity']);
+            $total_price += ($item['price'] - ($item['price'] * $item['discount'] / 100) 
+                * $item['quantity']);
         }
 
         // Sipariş notları
@@ -909,13 +949,15 @@ class DiaWebService
             }
 
             // şube kodu girilmemişse ön tanımlı şube kodu tanımlanır
-            if(empty($this->branch)) {
-                $this->branch = isset($company['ontanimli__key_sis_sube']) ? $company['ontanimli__key_sis_sube'] : null;
+            if (empty($this->branch)) {
+                $this->branch = isset($company['ontanimli__key_sis_sube']) 
+                    ? $company['ontanimli__key_sis_sube'] : null;
             }
 
             // depo kodu girilmemişse ön tanımlı depo kodu tanımlanır
-            if(empty($this->depository)) {
-                $this->depository = isset($company['ontanimli__key_sis_depo']) ? $company['ontanimli__key_sis_depo'] : null;
+            if (empty($this->depository)) {
+                $this->depository = isset($company['ontanimli__key_sis_depo']) 
+                    ? $company['ontanimli__key_sis_depo'] : null;
             }
         }
 
@@ -1025,7 +1067,8 @@ class DiaWebService
             }
             $this->session = $response['msg'];
         } else {
-            $msg = 'There was an error when signing in. Response msg: '. PHP_EOL . print_r($response, true);
+            $msg = 'There was an error when signing in. Response msg: ' . 
+                PHP_EOL . print_r($response, true);
             $this->exception_handle($msg);
             return $this->response_handle(
                 false,
@@ -1060,7 +1103,8 @@ class DiaWebService
 
         $response = $this->send_request($module, $data);
 
-        if (isset($response['code']) && $response['code'] == 200 && isset($response['msg'])) {
+        if (isset($response['code']) && $response['code'] == 200 
+            && isset($response['msg'])) {
             $this->session = null;
         } else {
             $msg = 'There was an error when signing out.';
@@ -1155,7 +1199,8 @@ class DiaWebService
 
             // Dönen JSON verisi çözülemezse hata ver
             if ($response_decode === false) {
-                $msg = 'The response data could not be converted to json format. Module is "' . $module . '"';
+                $msg = 'The response data could not be converted to json format. 
+                    Module is "' . $module . '"';
                 $this->exception_handle($msg);
                 return $this->response_handle(
                     false,

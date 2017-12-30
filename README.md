@@ -335,7 +335,7 @@ else {
 ```
 
 ## Dia'daki Hesap Bilgilerini Özelleştirme
-Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değişkeninindeki bazı parametreleri değiştirmelisiniz.
+Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değişkenindeki bazı parametreleri değiştirmelisiniz.
 
 ```php
 .
@@ -364,7 +364,7 @@ Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değ
 
 ## Dia İçin ``ID`` Formatlarını Özelleştirme
 ``Dia`` için verdiğiniz ``id`` değerine önek, sonek ve karakter sabitleme yapabilirsiniz. 
-Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değişkeninindeki bazı parametreleri değiştirebilirsiniz.
+Bu işlem için ``DiaWebService`` sınıfında yer alan ``$configurations`` değişkenindeki bazı parametreleri değiştirebilirsiniz.
 
 #### 1. Cari kart kodu için;
 ```php
