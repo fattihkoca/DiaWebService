@@ -2,7 +2,7 @@
 
 /**
  * Dia Web Servisi
- * Kişiselleştirmeler: $account_name, $configurations;
+ * Özelleştirmeler: $account_name, $configurations;
  */
 
 class DiaWebService
@@ -508,6 +508,9 @@ class DiaWebService
         // id formatı kod formatına ayarlanır
         $format_code = $this->format_id('customer', $id);
 
+        // ülke eklenmişse adres bilgilerine ekle
+        $data['country'] = isset($data['country']) ? ' ' . $data['country'] : '';
+
         // gönderilecek veriler hazırlanır
         $data = array(
             $params['insert'] => array(
@@ -520,7 +523,7 @@ class DiaWebService
                     'm_adresler' => array(
                         array(
                             'adres1' => strval($data['address']),
-                            'adres2' => strval($data['city']),
+                            'adres2' => strval($data['city'] . $data['country']),
                             'anaadres' => 1,
                             'telefon1' => strval($data['phone']),
                             'ceptel' => strval($data['phone'])
@@ -790,7 +793,10 @@ class DiaWebService
         $note_3 = isset($data['note_3']) ? $data['note_3'] : '';
 
         // Adres 2 slotu doldurulmuşsa ekle
-        $address2 = isset($data['address_2']) ? $data['address_2'] : '';
+        $data['address_2'] = isset($data['address_2']) ? $data['address_2'] : '';
+
+        // ülke eklenmişse adres bilgilerine ekle
+        $data['country'] = isset($data['country']) ? ' ' . $data['country'] : '';
 
         // Sipariş verileri derlenir
         $data = array(
@@ -809,9 +815,9 @@ class DiaWebService
                     'saat' => $order_hour,
                     'toplam' => $this->format_number($total_price),
                     'havaleliodeme' => $is_eft,
-                    'sevkadresi1' => $data['address'],
-                    'sevkadresi2' => $address2,
-                    'sevkadresi3' => $data['city'],
+                    'sevkadresi1' => strval($data['address']),
+                    'sevkadresi2' => strval($data['address_2']),
+                    'sevkadresi3' => strval($data['city'] . $data['country']),
                     'teslimat_telefon' => $data['phone'],
                     'aciklama1' => $note_1,
                     'aciklama2' => $note_2,
